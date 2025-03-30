@@ -44,6 +44,19 @@ function App() {
   */
   const addTask = () => {
     // START EDITING
+    if (title) {
+      const newTask = {
+        id : uuidv4(),
+        title: title,
+        description: description, 
+        completed: false,
+        dueDate : dueDate,
+      }
+      setTasks([...tasks, newTask]);
+      setTitle('');
+      setDescription('');
+      setDueDate('');
+    }
     // END EDITING
   };
 
@@ -61,6 +74,13 @@ function App() {
   */
   const toggleCompletion = (id) => {
     // START EDITING
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, completed: !task.completed}
+      }
+      return task;
+    } );
+    setTasks(updatedTasks);
     // END EDITING
   };
   
@@ -97,6 +117,15 @@ function App() {
   */
   const calculateProgress = () => {
     // START EDITING
+    const calculateProgress = () => {
+      if (tasks.length === 0) {
+        return 0;
+      }
+      
+      const completedTaskCount = tasks.filter((task) => task.completed).length;
+
+      return (completedTaskCount / tasks.length) * 100;
+    }
     // END EDITING
   };
 
@@ -116,16 +145,21 @@ function App() {
         <TextField
           required
           label="Title"
+          onChange={(e) => setTitle(e.target.value)}
         />
         <TextField
           label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <TextField
           label="Due Date"
           type="date"
           InputLabelProps={{ shrink: true }}
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
         />
-        <Button variant="contained">
+        <Button variant="contained" onClick={addTask}>
           Add Task
         </Button>
       </div>
